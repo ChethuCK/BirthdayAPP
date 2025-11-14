@@ -20,29 +20,36 @@ export default function BirthdayWish() {
         const audio = audioRef.current;
         if (!audio) return;
 
-        // 1. Try autoplay muted
+        // Try autoplay muted (LAPTOP ONLY)
         audio.muted = true;
         audio.play().then(() => {
-            // 2. Unmute after it starts
+            // Unmute shortly after
             setTimeout(() => {
                 audio.muted = false;
             }, 500);
         }).catch(() => {
-            // 3. If blocked, play on FIRST user interaction
-            const unlock = () => {
-                audio.muted = false;
-                audio.play().catch(() => {});
-                window.removeEventListener("click", unlock);
-                window.removeEventListener("touchstart", unlock);
-                window.removeEventListener("scroll", unlock);
-            };
-
-            window.addEventListener("click", unlock);
-            window.addEventListener("touchstart", unlock);
-            window.addEventListener("scroll", unlock);
+            // Mobile will fail here – that's OK
+            console.log("Autoplay blocked, waiting for tap...");
         });
-    }, []);
 
+        // Mobile unlock logic
+        const unlockAudio = () => {
+            if (audio.paused) {
+                audio.muted = false;
+                audio.play()
+                    .then(() => console.log("Mobile audio started"))
+                    .catch(err => console.log("Mobile play error:", err));
+            }
+        };
+
+        document.addEventListener("click", unlockAudio);
+        document.addEventListener("touchstart", unlockAudio);
+
+        return () => {
+            document.removeEventListener("click", unlockAudio);
+            document.removeEventListener("touchstart", unlockAudio);
+        };
+    }, []);
     return (
         <div className="birthday-bg fade-in">
 

@@ -121,7 +121,9 @@
 }
 
 /* Flowers footer */
-
+* {
+    pointer-events: auto !important;
+}
 
 
 /* Signature */
