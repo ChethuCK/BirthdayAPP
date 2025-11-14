@@ -94,7 +94,6 @@ export default function BirthdayWish() {
             </div>
 
             {/* Footer Flowers */}
-            <div className="footer-flowers"></div>
 
             {/* Signature */}
             <div className="signature fade-in">From CK with Love ❤️</div>
